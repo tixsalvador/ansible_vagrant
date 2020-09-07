@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    base: https://github.com/docker/machine/releases/download/v0.16.0
+  tasks:
+    - name: setting up env variables.
+      shell: uname -r
+      register: kernel_ver
+    - debug: var=kernel_ver.stdout
+
+    - shell: uname -s
+      register: system
+
+    - shell: uname -m
+      register: machine
+
+    - name: install kernel dev tools and headers
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - kernel-devel
+          - kernel-devel-{{ kernel_ver.stdout }}
+          - kernel-headers
+          - kernel-headers-{{ kernel_ver.stdout }}
+          - wget
+
+    - name: install virtualbox repo
+      get_url:
+        url: https://download.virtualbox.org/virtualbox/rpm/el/virtualbox.repo
+        dest: /etc/yum.repos.d
+        mode: "0644"
+
+    - name: install virtualbox
+      yum:
+        name: VirtualBox-6.1
+
+    - name: install docker-machine
+      get_url:
+        url: "{{ base }}/docker-machine-{{ system.stdout  }}-{{ machine.stdout }}"
+        dest: /usr/local/bin/docker-machine
+        mode: "0755"

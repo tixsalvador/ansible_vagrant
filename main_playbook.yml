@@ -1,0 +1,3 @@
+---
+- import_playbook: playbooks/yumupdate.yml
+- import_playbook: playbooks/docker.yml

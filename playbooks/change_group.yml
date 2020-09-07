@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: True
+  become: yes
+  tasks:
+    - name: Change SSSD group
+      lineinfile:
+        path: /etc/sssd/sssd.conf
+        backup: yes
+        regexp: '^simple_allow_groups\s=\ssk.*'
+        line: simple_allow_groups = {{ admin }}, {{ reg_user }}
