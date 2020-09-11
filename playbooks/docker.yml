@@ -18,6 +18,7 @@
     - name: install docker-ce and docker-ce-cli
       yum:
         name: "{{ packages }}"
+        disable_gpg_check: yes
       vars:
         packages:
           - docker-ce
@@ -34,4 +35,6 @@
     - name: install docker-compose
       get_url:
         url: "{{ base }}/docker-compose-{{ system.stdout }}-{{ machine.stdout }}"
+        dest: /usr/local/bin/docker-compose
+        mode: "0755"
     - reboot:
