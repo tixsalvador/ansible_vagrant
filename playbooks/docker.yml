@@ -2,8 +2,6 @@
 - hosts: all
   gather_facts: True
   become: yes
-  vars:
-    base: https://github.com/docker/compose/releases/download/1.27.0
   tasks:
     - name: setting up variables
       shell: uname -s
@@ -15,6 +13,7 @@
     - name: Add docker repo
       shell:
         cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
     - name: install docker-ce and docker-ce-cli
       yum:
         name: "{{ packages }}"
@@ -24,58 +23,15 @@
           - docker-ce
           - docker-ce-cli
           - containerd.io
+
     - name: Enable docker
       service:
         name: docker
         enabled: yes
+
     - name: add vagrant to docker group
       user:
         name: vagrant
         groups: docker
-    - name: install docker-compose
-      get_url:
-        url: "{{ base }}/docker-compose-{{ system.stdout }}-{{ machine.stdout }}"
-        dest: /usr/local/bin/docker-compose
-        mode: "0755"
-    - name: prepare kubernetes installation
-      sysctl:
-        name: net.bridge.bridge-nf-call-ip6tables
-        value: "1"
-        sysctl_set: yes
-    - sysctl:
-        name: net.bridge.bridge-nf-call-iptables
-        value: "1"
-        sysctl_set: yes
-    - selinux:
-        policy: targeted
-        state: permissive
-    - shell: sed -i '/^\/.*swap.*swap/s/^/#/' /etc/fstab
-      warn: no
-    - shell: swapoff -a
-    - name: install kubeadm, kubectl and kubelet
-      copy:
-        content: |
-          [kubernetes]
-          name=Kubernetes
-          baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
-          enabled=1
-          gpgcheck=1
-          repo_gpgcheck=1
-          gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-          exclude=kubelet kubeadm kubectl
-        dest: /etc/yum.repos.d/kubernetes.repo
-        owner: root
-        group: root
-        mode: 0644
-    - yum:
-        name: "{{ packages }}"
-        disable_excludes: all
-      vars:
-        packages:
-          - kubelet
-          - kubeadm
-          - kubectl
-    - service:
-        name: kubelet
-        enabled: yes
+
     - reboot:

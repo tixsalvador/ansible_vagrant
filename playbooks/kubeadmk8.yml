@@ -1,0 +1,55 @@
+---
+- hosts: all
+  gather_facts: True
+  become: yes
+  tasks:
+    - name: prepare kubernetes installation
+      sysctl:
+        name: net.bridge.bridge-nf-call-ip6tables
+        value: "1"
+        sysctl_set: yes
+
+    - sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: "1"
+        sysctl_set: yes
+
+    - selinux:
+        policy: targeted
+        state: permissive
+
+    - shell:
+        cmd: sed -i '/^\/.*swap.*swap/s/^/#/' /etc/fstab
+        warn: no
+
+    - shell: swapoff -a
+
+    - name: install kubeadm, kubectl and kubelet
+      copy:
+        content: |
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+          enabled=1
+          gpgcheck=1
+          repo_gpgcheck=1
+          gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+          exclude=kubelet kubeadm kubectl
+        dest: /etc/yum.repos.d/kubernetes.repo
+        owner: root
+        group: root
+        mode: 0644
+
+    - yum:
+        name: "{{ packages }}"
+        disable_excludes: all
+      vars:
+        packages:
+          - kubelet
+          - kubeadm
+          - kubectl
+
+    - service:
+        name: kubelet
+        state: started
+        enabled: yes

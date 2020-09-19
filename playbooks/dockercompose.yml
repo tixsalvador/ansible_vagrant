@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: True
+  become: yes
+  vars:
+    base: https://github.com/docker/compose/releases/download/1.27.0
+  tasks:
+    - name: setting up variables
+      shell: uname -s
+      register: system
+
+    - shell: uname -m
+      register: machine
+
+    - name: install docker-compose
+      get_url:
+        url: "{{ base }}/docker-compose-{{ system.stdout }}-{{ machine.stdout }}"
+        dest: /usr/local/bin/docker-compose
+        mode: "0755"

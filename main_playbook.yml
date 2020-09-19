@@ -1,4 +1,6 @@
 ---
 - import_playbook: playbooks/yumupdate.yml
 - import_playbook: playbooks/docker.yml
-#- import_playbook: playbooks/docker_machine.yml
+- import_playbook: playbooks/dockercompose.yml
+- import_playbook: playbooks/dockermachine.yml
+- import_playbook: playbooks/kubeadmk8.yml
