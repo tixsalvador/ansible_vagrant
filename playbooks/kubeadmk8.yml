@@ -53,3 +53,8 @@
         name: kubelet
         state: started
         enabled: yes
+
+    - copy:
+        src: /home/francis/myBuilds/training/ansible/install_apm/files/kube-flannel.yml
+        dest: /home/vagrant/kube-flannel.yml
+        mode: "0644"
