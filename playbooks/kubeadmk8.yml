@@ -58,3 +58,9 @@
         src: /home/francis/myBuilds/training/ansible/install_apm/files/kube-flannel.yml
         dest: /home/vagrant/kube-flannel.yml
         mode: "0644"
+
+    - name: install kubens
+      get_url:
+        url: https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
+        dest: /usr/local/bin/kubens
+        mode: "0755"
