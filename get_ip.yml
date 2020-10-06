@@ -1,6 +1,0 @@
----
-- hosts: all
-  gather_facts: True
-  become: yes
-  tasks:
-    - debug: var=ansible_eth1.ipv4.address
