@@ -9,6 +9,7 @@
       vars:
         packages:
           - vim
+          - net-tools
 
     - name: Upgrade all packages
       yum:

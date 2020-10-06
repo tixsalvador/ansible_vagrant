@@ -54,6 +54,11 @@
         state: started
         enabled: yes
 
+    - lineinfile:
+        path: /etc/sysconfig/kubelet
+        regexp: "^KUBELET_EXTRA_ARGS.*"
+        line: "KUBELET_EXTRA_ARGS=--node-ip={{ ansible_eth1.ipv4.address }}"
+
     - copy:
         src: /home/francis/myBuilds/training/ansible/install_apm/files/kube-flannel.yml
         dest: /home/vagrant/kube-flannel.yml
