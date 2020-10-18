@@ -10,6 +10,7 @@
         packages:
           - vim
           - net-tools
+          - git
 
     - name: Upgrade all packages
       yum:
