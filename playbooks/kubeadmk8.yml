@@ -60,7 +60,7 @@
         line: "KUBELET_EXTRA_ARGS=--node-ip={{ ansible_eth1.ipv4.address }}"
 
     - get_url:
-        url: https://github.com/tixsalvador/ansible_vagrant/blob/master/files/kube-flannel.yml
+        url: https://raw.githubusercontent.com/tixsalvador/ansible_vagrant/master/files/kube-flannel.yml
         dest: /home/vagrant/kube-flannel.yml
         mode: "0644"
 
