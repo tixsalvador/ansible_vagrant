@@ -69,3 +69,11 @@
         url: https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
         dest: /usr/local/bin/kubens
         mode: "0755"
+        
+     - name: install helm
+       get_url:
+        url: https://get.helm.sh/helm-v3.4.0-linux-amd64.tar.gz
+        dest: /home/vagrant
+        mode: "0755"   
+        
+     
